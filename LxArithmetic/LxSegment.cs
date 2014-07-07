@@ -11,7 +11,7 @@ namespace Procinto.LexicographicalArithmetic
 		public LxWord Begin { get; set; }
 		public LxWord End { get; set; }
 
-		public ILxSegment Create(ILxWord begin, ILxWord end)
+		public ILxSegment Create(ILxWord/*ViaAlphabets*/ begin, ILxWord/*ViaAlphabets*/ end)
 		{
 			if (!begin.IsCompatible(end)) {
 				throw new LxArithmeticException("Attempt to create a segment from incompatible words");
@@ -25,7 +25,7 @@ namespace Procinto.LexicographicalArithmetic
 			return 0uL;
 		} }
 
-		public List<ILxWord> GetAll()
+		public List<ILxWordViaAlphabets> GetAll()
 		{
 			// TODO
 			return null;

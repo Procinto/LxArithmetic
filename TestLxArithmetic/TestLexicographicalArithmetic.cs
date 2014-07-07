@@ -2,17 +2,22 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-//using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Procinto.LexicographicalArithmetic;
 using Procinto;
 
 using NUnit.Framework;
+using Procinto.LexicographicalArithmetic.Test;
 
 namespace TestLxArithmetic
 {
 	/// <summary>
 	/// We test a particular implementation, Lx*.
+	/// 
+	/// Note: code testing the API is here, an external assembly.
+	/// Code testing parts which are not in API is in the same assembly
+	/// and is called from here.
+	/// 
 	/// </summary>
 	[TestFixture()]
 	public class TestLexicographicalArithmetic
@@ -23,187 +28,210 @@ namespace TestLxArithmetic
 		{
 			#region ILxCharacter Members
 
-			public ILxCharacter Create(string alphabet, int index)
+			public ILxCharacter Create (string alphabet, int index)
 			{
 				return this;
 			}
 
-			public bool IsValid
-			{
-				get { throw new NotImplementedException(); }
+			public bool IsValid {
+				get { throw new NotImplementedException (); }
 			}
 
-			public bool IsCompatible(ILxCharacter theOtherCharacter)
+			public bool IsCompatible (ILxCharacter theOtherCharacter)
 			{
-				throw new NotImplementedException();
+				throw new NotImplementedException ();
 			}
 
-			public char? ToCharacter()
+			public char? ToCharacter ()
 			{
-				throw new NotImplementedException();
+				throw new NotImplementedException ();
 			}
 
-			public LxCharacter Increment()
+			public LxCharacter Increment ()
 			{
-				throw new NotImplementedException();
+				throw new NotImplementedException ();
 			}
 
-			public bool HasRolledOver
-			{
-				get { throw new NotImplementedException(); }
+			public bool HasRolledOver {
+				get { throw new NotImplementedException (); }
 			}
 
 			#endregion
 		}
 
 		[Test]
-		public void TestLxCharacter()
+		public void TestLxCharacter ()
 		{
 			ILxCharacter c = null;
 
 			// Test invalid input.
-			c = new LxCharacter(alphabetABC, -1);
-			Assert.IsNotNull(c);
-			Assert.IsFalse(c.IsValid);
+			c = new LxCharacter (alphabetABC, -1);
+			Assert.IsNotNull (c);
+			Assert.IsFalse (c.IsValid);
 
-			c = new LxCharacter(null, 0);
-			Assert.IsNotNull(c);
-			Assert.IsFalse(c.IsValid);
+			c = new LxCharacter (null, 0);
+			Assert.IsNotNull (c);
+			Assert.IsFalse (c.IsValid);
 
-			c = new LxCharacter(alphabetABC, alphabetABC.Count());
-			Assert.IsNotNull(c);
-			Assert.IsFalse(c.IsValid);
+			c = new LxCharacter (alphabetABC, alphabetABC.Count ());
+			Assert.IsNotNull (c);
+			Assert.IsFalse (c.IsValid);
 
-			c = new LxCharacter("", 0);
-			Assert.IsNotNull(c);
-			Assert.IsFalse(c.IsValid);
+			c = new LxCharacter ("", 0);
+			Assert.IsNotNull (c);
+			Assert.IsFalse (c.IsValid);
 
 			// Test conversion to character.
-			c = new LxCharacter(alphabetABC, 0);
-			Assert.IsNotNull(c);
-			Assert.IsTrue(c.IsValid);
-			Assert.AreEqual('A', c.ToCharacter());
+			c = new LxCharacter (alphabetABC, 0);
+			Assert.IsNotNull (c);
+			Assert.IsTrue (c.IsValid);
+			Assert.AreEqual ('A', c.ToCharacter ());
 
 			// Test increment.
-			c.Increment();
-			Assert.IsNotNull(c);
-			Assert.IsTrue(c.IsValid);
-			Assert.AreEqual('B', c.ToCharacter());
-			Assert.IsFalse(c.HasRolledOver);
+			c.Increment ();
+			Assert.IsNotNull (c);
+			Assert.IsTrue (c.IsValid);
+			Assert.AreEqual ('B', c.ToCharacter ());
+			Assert.IsFalse (c.HasRolledOver);
 
 			// Test roll over.
-			c = new LxCharacter("ab", 1);
-			Assert.IsNotNull(c);
-			Assert.IsTrue(c.IsValid);
-			Assert.AreEqual('b', c.ToCharacter());
+			c = new LxCharacter ("ab", 1);
+			Assert.IsNotNull (c);
+			Assert.IsTrue (c.IsValid);
+			Assert.AreEqual ('b', c.ToCharacter ());
 
-			c.Increment();
-			Assert.IsNotNull(c);
-			Assert.IsTrue(c.IsValid);
-			Assert.AreEqual('a', c.ToCharacter());
-			Assert.IsTrue(c.HasRolledOver);
+			c.Increment ();
+			Assert.IsNotNull (c);
+			Assert.IsTrue (c.IsValid);
+			Assert.AreEqual ('a', c.ToCharacter ());
+			Assert.IsTrue (c.HasRolledOver);
 
-			c.Increment();
-			Assert.IsNotNull(c);
-			Assert.IsTrue(c.IsValid);
-			Assert.AreEqual('b', c.ToCharacter());
-			Assert.IsFalse(c.HasRolledOver);
+			c.Increment ();
+			Assert.IsNotNull (c);
+			Assert.IsTrue (c.IsValid);
+			Assert.AreEqual ('b', c.ToCharacter ());
+			Assert.IsFalse (c.HasRolledOver);
 
-			c.Increment();
-			Assert.IsNotNull(c);
-			Assert.IsTrue(c.IsValid);
-			Assert.AreEqual('a', c.ToCharacter());
-			Assert.IsTrue(c.HasRolledOver);
+			c.Increment ();
+			Assert.IsNotNull (c);
+			Assert.IsTrue (c.IsValid);
+			Assert.AreEqual ('a', c.ToCharacter ());
+			Assert.IsTrue (c.HasRolledOver);
 
 			// Test roll over "in place".
-			c = new LxCharacter("_", 0);
-			Assert.IsNotNull(c);
-			Assert.IsTrue(c.IsValid);
-			Assert.AreEqual('_', c.ToCharacter());
-			Assert.IsFalse(c.HasRolledOver); // no increment => no roll over
+			c = new LxCharacter ("_", 0);
+			Assert.IsNotNull (c);
+			Assert.IsTrue (c.IsValid);
+			Assert.AreEqual ('_', c.ToCharacter ());
+			Assert.IsFalse (c.HasRolledOver); // no increment => no roll over
 
-			c.Increment();
-			Assert.IsNotNull(c);
-			Assert.IsTrue(c.IsValid);
-			Assert.AreEqual('_', c.ToCharacter());
-			Assert.IsTrue(c.HasRolledOver);
+			c.Increment ();
+			Assert.IsNotNull (c);
+			Assert.IsTrue (c.IsValid);
+			Assert.AreEqual ('_', c.ToCharacter ());
+			Assert.IsTrue (c.HasRolledOver);
 
-			c.Increment();
-			Assert.IsNotNull(c);
-			Assert.IsTrue(c.IsValid);
-			Assert.AreEqual('_', c.ToCharacter());
-			Assert.IsTrue(c.HasRolledOver);
+			c.Increment ();
+			Assert.IsNotNull (c);
+			Assert.IsTrue (c.IsValid);
+			Assert.AreEqual ('_', c.ToCharacter ());
+			Assert.IsTrue (c.HasRolledOver);
 
 			// Test IsCompatible
-			c = new LxCharacter(alphabetABC, 4);
+			c = new LxCharacter (alphabetABC, 4);
 
-			Assert.IsTrue(c.IsCompatible(c));
+			Assert.IsTrue (c.IsCompatible (c));
 
-			LxCharacter aCharacter = new LxCharacter();
-			Assert.IsFalse(c.IsCompatible(aCharacter));
+			LxCharacter aCharacter = new LxCharacter ();
+			Assert.IsFalse (c.IsCompatible (aCharacter));
 
-			aCharacter.Create(alphabetABC, 3);
-			Assert.IsTrue(c.IsCompatible(aCharacter));
+			aCharacter.Create (alphabetABC, 3);
+			Assert.IsTrue (c.IsCompatible (aCharacter));
 
-			aCharacter.Create(alphabetABC, -2);
-			Assert.IsTrue(c.IsCompatible(aCharacter));
+			aCharacter.Create (alphabetABC, -2);
+			Assert.IsTrue (c.IsCompatible (aCharacter));
 
-			ILxCharacter notACharacter = new PoorImplementation().Create(alphabetABC, 0);
-			Assert.IsFalse(c.IsCompatible(notACharacter));
+			ILxCharacter notACharacter = new PoorImplementation ().Create (alphabetABC, 0);
+			Assert.IsFalse (c.IsCompatible (notACharacter));
 		}
 
 		[Test]
-		public void TestLxWord()
+		public void TestLxUtility_IsValidAlphabet ()
+		{
+			// IsValidAlphabet
+			string abc = null;
+			Assert.IsFalse (LxUtility.IsValidAlphabet (abc));
+
+			abc = "";
+			Assert.IsFalse (LxUtility.IsValidAlphabet (abc));
+
+			abc = "xyzXYZ";
+			Assert.IsTrue (LxUtility.IsValidAlphabet (abc));
+
+			abc = "zyz";
+			Assert.IsFalse (LxUtility.IsValidAlphabet (abc));
+		}
+
+		/// <summary>
+		/// Internal (not part of API).
+		/// </summary>
+		[Test]
+		public void TestLxUtility_WordRepresentationFromCharactersToAlphabets ()
+		{
+			TestInternalLexicographicalArithmetic.TestLxUtility_WordRepresentationFromCharactersToAlphabets ();
+		}
+
+		[Test]
+		public void TestLxWord ()
 		{
 			ILxWord w = null;
 			List<ILxCharacter> enuc = null;
 
 			// Create - edge cases.
-			w = new LxWord(LxElementOrder.MajorToMinor, null);
-			Assert.IsNotNull(w);
-			Assert.IsFalse(w.IsValid);
-			Assert.AreEqual(0, w.Length);
+			w = new LxWord (LxElementOrder.MajorToMinor, null);
+			Assert.IsNotNull (w);
+			Assert.IsFalse (w.IsValid);
+			Assert.AreEqual (0, w.Length);
 
-			enuc = new List<ILxCharacter>();
-			w = new LxWord(LxElementOrder.MajorToMinor, enuc);
-			Assert.IsNotNull(w);
-			Assert.AreEqual(0, w.Length);
+			enuc = new List<ILxCharacter> ();
+			w = new LxWord (LxElementOrder.MajorToMinor, enuc);
+			Assert.IsNotNull (w);
+			Assert.AreEqual (0, w.Length);
 			try {
-				w.Increment();
-			}
-			catch (Exception ex) {
-				Assert.Fail("Incrementing an empty word threw an exception: " + ex);
+				w.Increment ();
+			} catch (Exception ex) {
+				Assert.Fail ("Incrementing an empty word threw an exception: " + ex);
 			}
 			
 			// Create - normal case, with a list.
-			enuc = new List<ILxCharacter>(2);
-			enuc.Add(new LxCharacter("ab", 0)); // major
-			enuc.Add(new LxCharacter("012", 1)); // minor
-			w = new LxWord(LxElementOrder.MajorToMinor, enuc);
-			Assert.IsNotNull(w);
-			Assert.AreEqual(2, w.Length);
+			enuc = new List<ILxCharacter> (2);
+			enuc.Add (new LxCharacter ("ab", 0)); // major
+			enuc.Add (new LxCharacter ("012", 1)); // minor
+			w = new LxWord (LxElementOrder.MajorToMinor, enuc);
+			Assert.IsNotNull (w);
+			Assert.AreEqual (2, w.Length);
 
-			Assert.AreEqual("a1", w.StringValue());
-			Assert.AreEqual(1uL, w.NumericValue());
+			Assert.AreEqual ("a1", w.StringValue);
+			Assert.AreEqual (1uL, w.NumericValue);
 			
 			// Increment without carryover.
-			w.Increment();
-			Assert.AreEqual("a2", w.StringValue());
-			Assert.AreEqual(2uL, w.NumericValue());
+			w.Increment ();
+			Assert.AreEqual ("a2", w.StringValue);
+			Assert.AreEqual (2uL, w.NumericValue);
 
 			// Increment with carryover.
-			w.Increment();
-			Assert.AreEqual("b0", w.StringValue());
-			Assert.AreEqual(3uL, w.NumericValue());
+			w.Increment ();
+			Assert.AreEqual ("b0", w.StringValue);
+			Assert.AreEqual (3uL, w.NumericValue);
 
-			w.Increment();
-			Assert.AreEqual("b1", w.StringValue());
-			Assert.AreEqual(4uL, w.NumericValue());
+			w.Increment ();
+			Assert.AreEqual ("b1", w.StringValue);
+			Assert.AreEqual (4uL, w.NumericValue);
 
 			// Create - normal case, with a parameter sequence.
-			w = new LxWord(LxElementOrder.MinorToMajor, 
-				new LxCharacter("012", 1), new LxCharacter("ab", 0));
-			Assert.AreEqual("a1", w.StringValue());
+			w = new LxWord (LxElementOrder.MinorToMajor, 
+				new LxCharacter ("012", 1), new LxCharacter ("ab", 0));
+			Assert.AreEqual ("a1", w.StringValue);
 
 			// Increment - exhausted word space.
 			// TODO - need to decide what to do on exhaustion.
@@ -217,49 +245,75 @@ namespace TestLxArithmetic
 		}
 
 		[Test]
-		public void TestLxWordOrder_Compare()
+		public void TestLxWord_CreateViaAlphabets ()
+		{
+			// Lists.
+
+			List<string> listOfAlphabets = new List<string> ();
+			listOfAlphabets.Add ("cba");
+			listOfAlphabets.Add ("321");
+
+			List<uint> listOfIndices = new List<uint> ();
+			listOfIndices.Add (1);
+			listOfIndices.Add (2);
+
+			LxWord w = new LxWord (LxElementOrder.MajorToMinor, listOfAlphabets, listOfIndices);
+			Assert.AreEqual ("b1", w.StringValue);
+
+			// Arrays
+
+			var arrayOfAlphabets = new string[] {"cba", "321"};
+			var arrayOfIndices = new uint[] {2, 1};
+			w = new LxWord (LxElementOrder.MajorToMinor, arrayOfAlphabets, arrayOfIndices);
+			Assert.AreEqual ("a2", w.StringValue);
+
+			// Arrays, short form
+
+			w = new LxWord (LxElementOrder.MajorToMinor, 
+                new string[] {"cba", "321"}, new uint[] {0,	0});
+			Assert.AreEqual ("c3", w.StringValue);
+		}
+
+		[Test]
+		public void TestLxWordOrder_Compare ()
 		{
 			// Equal lengths. Compatible words.
 
-			var enuc = new List<ILxCharacter>();
-			enuc.Add(new LxCharacter("ab", 0));
-			enuc.Add(new LxCharacter("012", 2));
-			LxWord w1 = new LxWord(LxElementOrder.MajorToMinor, enuc) as LxWord;
-			Assert.AreEqual("a2", w1.StringValue());
+			var enuc = new List<ILxCharacter> ();
+			enuc.Add (new LxCharacter ("ab", 0));
+			enuc.Add (new LxCharacter ("012", 2));
+			LxWord w1 = new LxWord (LxElementOrder.MajorToMinor, enuc) as LxWord;
+			Assert.AreEqual ("a2", w1.StringValue);
 
-			enuc = new List<ILxCharacter>();
-			enuc.Add(new LxCharacter("ab",1));
-			enuc.Add(new LxCharacter("012", 0));
-			LxWord w2 = new LxWord(LxElementOrder.MajorToMinor, enuc) as LxWord;
-			Assert.AreEqual("b0", w2.StringValue());
+			enuc = new List<ILxCharacter> ();
+			enuc.Add (new LxCharacter ("ab", 1));
+			enuc.Add (new LxCharacter ("012", 0));
+			LxWord w2 = new LxWord (LxElementOrder.MajorToMinor, enuc) as LxWord;
+			Assert.AreEqual ("b0", w2.StringValue);
 
-			Assert.IsTrue(w1.IsCompatible(w2));
+			Assert.IsTrue (w1.IsCompatible (w2));
 
-			Assert.AreEqual(-1, LxWordOrder.Compare(w1, w2));
-			Assert.AreEqual(0, LxWordOrder.Compare(w1, w1));
-			Assert.AreEqual(1, LxWordOrder.Compare(w2, w1));
+			Assert.AreEqual (-1, LxWordOrder.Compare (w1, w2));
+			Assert.AreEqual (0, LxWordOrder.Compare (w1, w1));
+			Assert.AreEqual (1, LxWordOrder.Compare (w2, w1));
 
 			// Equal lengths. Incompatible words.
 
-			LxWord w3 = new LxWord(LxElementOrder.MinorToMajor, 
-				new LxCharacter("ab", 1), 
-				new LxCharacter("ab", 0));
-			Assert.AreEqual("ab", w3.StringValue());
+			LxWord w3 = new LxWord (LxElementOrder.MinorToMajor, 
+				new LxCharacter ("ab", 1), 
+				new LxCharacter ("ab", 0));
+			Assert.AreEqual ("ab", w3.StringValue);
 
 			bool wasThrownCorrectly = false;
 			try {
-				LxWordOrder.Compare(w1, w3);
-			}
-			catch (LxArithmeticException) {
-				// Correct exception thrown.
+				LxWordOrder.Compare (w1, w3);
+			} catch (LxArithmeticException) { // correct exception
 				wasThrownCorrectly = true;
-			}
-			catch (Exception ex) {
-				Assert.Fail("Incorrect exception on a comparison of incompatible words: " + ex);
-			}
-			finally {
+			} catch (Exception ex) {
+				Assert.Fail ("Incorrect exception on a comparison of incompatible words: " + ex);
+			} finally {
 				if (!wasThrownCorrectly) {
-					Assert.Fail("Exception not thrown on a comparison of incompatible words");
+					Assert.Fail ("Exception not thrown on a comparison of incompatible words");
 				}
 			}
 
@@ -268,45 +322,42 @@ namespace TestLxArithmetic
 		}
 
 		[Test]
-		public void TestLxWordOrder_Distance()
+		public void TestLxWordOrder_Distance ()
 		{
-			LxWord w_b0 = new LxWord(LxElementOrder.MinorToMajor, 
-				new LxCharacter("01", 0),
-				new LxCharacter("abc", 1));
-			Assert.AreEqual("b0", w_b0.StringValue());
-			LxWord w_c0 = new LxWord(LxElementOrder.MinorToMajor, 
-				new LxCharacter("01", 0),
-				new LxCharacter("abc", 2));
-			Assert.AreEqual("c0", w_c0.StringValue());
-			LxWord w_b0_too = new LxWord(LxElementOrder.MajorToMinor,
-				new LxCharacter("abc", 1),
-				new LxCharacter("01", 0));
-			Assert.AreEqual("b0", w_b0_too.StringValue());
-			LxWord w_c0_butDifferent = new LxWord(LxElementOrder.MajorToMinor,
-				new LxCharacter("abc", 2),
-				new LxCharacter("012", 0));
-			Assert.AreEqual("c0", w_c0_butDifferent.StringValue());
+			LxWord w_b0 = new LxWord (LxElementOrder.MinorToMajor, 
+				new LxCharacter ("01", 0),
+				new LxCharacter ("abc", 1));
+			Assert.AreEqual ("b0", w_b0.StringValue);
+			LxWord w_c0 = new LxWord (LxElementOrder.MinorToMajor, 
+				new LxCharacter ("01", 0),
+				new LxCharacter ("abc", 2));
+			Assert.AreEqual ("c0", w_c0.StringValue);
+			LxWord w_b0_too = new LxWord (LxElementOrder.MajorToMinor,
+				new LxCharacter ("abc", 1),
+				new LxCharacter ("01", 0));
+			Assert.AreEqual ("b0", w_b0_too.StringValue);
+			LxWord w_c0_butDifferent = new LxWord (LxElementOrder.MajorToMinor,
+				new LxCharacter ("abc", 2),
+				new LxCharacter ("012", 0));
+			Assert.AreEqual ("c0", w_c0_butDifferent.StringValue);
 
-			Assert.AreEqual(2L, LxWordOrder.Distance(w_b0, w_c0));
-			Assert.AreEqual(0L, LxWordOrder.Distance(w_b0, w_b0_too));
+			Assert.AreEqual (2L, LxWordOrder.Distance (w_b0, w_c0));
+			Assert.AreEqual (0L, LxWordOrder.Distance (w_b0, w_b0_too));
 			
 			bool wasThrownCorrectly = false;
 			try {
-				Assert.AreNotEqual(0L, LxWordOrder.Distance(w_c0, w_c0_butDifferent));
-			}
-			catch (LxArithmeticException) {
+				Assert.AreNotEqual (0L, LxWordOrder.Distance (w_c0, w_c0_butDifferent));
+			} catch (LxArithmeticException) {
 				wasThrownCorrectly = true;
-			}
-			catch (Exception ex) {
-				Assert.Fail("Incorrect exception on a comparison of incompatible words: " + ex);
-			}
-			finally {
+			} catch (Exception ex) {
+				Assert.Fail ("Incorrect exception on a comparison of incompatible words: " + ex);
+			} finally {
 				if (!wasThrownCorrectly) {
-					Assert.Fail("Exception not thrown on a comparison of incompatible words");
+					Assert.Fail ("Exception not thrown on a comparison of incompatible words");
 				}
 			}
 
-		}
+		} // TestLxWordOrder_Distance()
 
 	}
 }
